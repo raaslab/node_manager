@@ -1,6 +1,7 @@
 <launch>
 	<node pkg="node_manager" type="node_manager.py" name="node_manager">
-		<param name="timeout" value="2" />
-<!--remap from="chatter" to="hello-1"/-->
+		<param name="timeout" type="int" value="2" />
+		<param name="subscribe_to_topic" type="str" value="chatter" />
+		<param name="node_name" type="str" value="chatter" />
 	</node>
 </launch>

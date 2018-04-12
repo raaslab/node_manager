@@ -2,7 +2,7 @@
 import rospy
 import time 
 import os 
-from std_msgs.msg import String
+from rospy.msg import AnyMsg
 
 lasttime = 0
 
@@ -13,10 +13,15 @@ def callback(data):
 def listener():
 
 	rospy.init_node('node_manager', anonymous=True)
-	rospy.Subscriber("chatter", String, callback)
-
 	timeout = rospy.get_param('timeout',2)
-	
+	subtopic = rospy.get_param('subscribe_to_topic','chatter');
+	nodename = rospy.get_param('node_name','chatter');
+
+	rospy.loginfo('Subscribing to %s' % subtopic);
+	rospy.loginfo('Node that will be managed %s' % nodename);
+	rospy.loginfo('Timeout of %d' % timeout);
+	rospy.Subscriber(subtopic, AnyMsg, callback)
+
 	global lasttime
 	lasttime = rospy.get_rostime()
 
@@ -26,12 +31,10 @@ def listener():
 
 		if (now.secs - lasttime.secs > timeout):
 			lasttime = now
-			rospy.loginfo("I haven't heard")
+			rospy.loginfo("Timeout occured")
 			nodes = os.popen("rosnode list").readlines()
-			print nodes
-			if any("chatter" in s for s in nodes):
-				
-				os.system(os.path.dirname(os.path.realpath(__file__))+"/killnode.sh")
+			if any(nodename in s for s in nodes):
+				os.system("rosnode kill " + nodename)
 
     		r.sleep()
 
