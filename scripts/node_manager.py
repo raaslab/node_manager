@@ -18,8 +18,8 @@ def listener():
 	nodename = rospy.get_param('node_name','chatter');
 
 	rospy.loginfo('Subscribing to %s' % subtopic);
-	rospy.loginfo('Node that will be managed %s' % nodename);
-	rospy.loginfo('Timeout of %d' % timeout);
+	rospy.loginfo('Node that will be managed: %s' % nodename);
+	rospy.loginfo('Timeout: %d' % timeout);
 	rospy.Subscriber(subtopic, AnyMsg, callback)
 
 	global lasttime
