@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="node_manager" type="node_manager.py" name="node_manager">
+		<param name="timeout" value="2" />
+<!--remap from="chatter" to="hello-1"/-->
+	</node>
+</launch>

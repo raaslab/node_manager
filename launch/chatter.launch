@@ -1,0 +1,3 @@
+<launch>
+	<node name="chatter" pkg="node_manager" type="chatter.py" respawn="true" />
+</launch>
