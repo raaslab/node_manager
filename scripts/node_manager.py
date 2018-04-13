@@ -13,9 +13,9 @@ def callback(data):
 def listener():
 
 	rospy.init_node('node_manager', anonymous=True)
-	timeout = rospy.get_param('timeout',2)
-	subtopic = rospy.get_param('subscribe_to_topic','chatter');
-	nodename = rospy.get_param('node_name','chatter');
+	timeout = rospy.get_param('~timeout',2)
+	subtopic = rospy.get_param('~subscribe_to_topic','chatter');
+	nodename = rospy.get_param('~node_name','chatter');
 
 	rospy.loginfo('Subscribing to %s' % subtopic);
 	rospy.loginfo('Node that will be managed: %s' % nodename);
