@@ -9,9 +9,12 @@ lasttime = 0
 
 def callback(data):
 	global lasttime
+	global killpub
 	lasttime = rospy.get_rostime()
+	killpub.publish(0)
 
 def listener():
+	global killpub
 
 	rospy.init_node('node_manager', anonymous=True)
 	statustimeout = rospy.get_param('~status_timeout',2)
@@ -48,11 +51,6 @@ def listener():
 				if any(nodename in s for s in nodes): 
 					rospy.loginfo("node_manager: camera_node kill occurred at %i" % now.secs)
 					os.system("rosnode kill " + nodename)
-		else:
-			nodes = os.popen("rosnode list").readlines()
-			if any(nodename in s for s in nodes):
-				rospy.loginfo("node_manager: camera node is there at %i" % now.secs)
-				killpub.publish(0)
 
     		r.sleep()
 
