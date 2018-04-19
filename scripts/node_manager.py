@@ -27,6 +27,10 @@ def listener():
 	rospy.loginfo('Node will be killed after: %d secs' % killtimeout);
 	rospy.Subscriber(subtopic, AnyMsg, callback)
 
+	if (statustimeout > killtimeout):
+		rospy.logfatal('status_timeout cannot be greater than kill_timeout')
+		exit()
+
 	global lasttime
 	lasttime = rospy.get_rostime()
 
