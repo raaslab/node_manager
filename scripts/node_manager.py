@@ -14,14 +14,17 @@ def callback(data):
 def listener():
 
 	rospy.init_node('node_manager', anonymous=True)
-	timeout = rospy.get_param('~timeout',2)
+	statustimeout = rospy.get_param('~status_timeout',2)
+	killtimeout = rospy.get_param('~kill_timeout',4)
 	subtopic = rospy.get_param('~subscribe_to_topic','chatter')
 	nodename = rospy.get_param('~node_name','chatter')
+
 	killpub = rospy.Publisher('node_manager/camera_kill',Int32,queue_size=10)
 
 	rospy.loginfo('Subscribing to %s' % subtopic);
 	rospy.loginfo('Node that will be managed: %s' % nodename);
-	rospy.loginfo('Timeout: %d' % timeout);
+	rospy.loginfo('Status message will timeout after: %d secs' % statustimeout);
+	rospy.loginfo('Node will be killed after: %d secs' % killtimeout);
 	rospy.Subscriber(subtopic, AnyMsg, callback)
 
 	global lasttime
@@ -31,14 +34,16 @@ def listener():
 	while not rospy.is_shutdown():
 		now = rospy.get_rostime()
 
-		if (now.secs - lasttime.secs > timeout):
-			lasttime = now
+		if (now.secs - lasttime.secs > statustimeout):
 			rospy.loginfo("node_manager: timeout occurred at %i" % now.secs)
-			nodes = os.popen("rosnode list").readlines()
-			if any(nodename in s for s in nodes):
-				rospy.loginfo("node_manager: camera_node kill occurred at %i" % now.secs)
-				killpub.publish(1)
-				os.system("rosnode kill " + nodename)
+			killpub.publish(1)
+
+			if (now.secs - lasttime.secs > killtimeout):
+				lasttime = now
+				nodes = os.popen("rosnode list").readlines()
+				if any(nodename in s for s in nodes): 
+					rospy.loginfo("node_manager: camera_node kill occurred at %i" % now.secs)
+					os.system("rosnode kill " + nodename)
 		else:
 			nodes = os.popen("rosnode list").readlines()
 			if any(nodename in s for s in nodes):

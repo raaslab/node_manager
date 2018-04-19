@@ -1,7 +1,10 @@
 <launch>
 	<node pkg="node_manager" type="node_manager.py" name="node_manager">
-		<param name="timeout" type="int" value="10" />
-		<param name="subscribe_to_topic" type="str" value="/pg_$(env SANSA_CAMERA)/image_raw" />
-		<param name="node_name" type="str" value="/pg_$(env SANSA_CAMERA)" />
+		<param name="status_timeout" type="int" value="2" />
+		<param name="kill_timeout" type="int" value="10" />
+		<param name="subscribe_to_topic" type="str" value="chatter" />
+		<param name="node_name" type="str" value="chatter" />
+		<!--param name="subscribe_to_topic" type="str" value="/pg_$(env SANSA_CAMERA)/image_raw" />
+		<param name="node_name" type="str" value="/pg_$(env SANSA_CAMERA)" /-->
 	</node>
 </launch>
